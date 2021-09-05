@@ -112,8 +112,18 @@ class Ray {
 		return closest;
 	}
 
+	public void die () {
+		this.dead = true;
+		//println("dead");
+	}
+
 	public void step() {
 		Obstacle nearestObst = getNearestObstacle();
+		if (nearestObst == null) {
+			die();
+			return;
+		}
+
 		//TODO what if no obstacle
 		RayCastSearchArea currentSearch = new RayCastSearchArea(crawl, nearestObst);
 		searches.add(currentSearch);
@@ -124,12 +134,13 @@ class Ray {
 		this.crawl = between;
 
 		if (offScreen(this.crawl)) {
-			dead = true;
-			//println("DEAD");
+			die();
+			return;
 		}
+
 		if (currentSearch.diam < 10) {
-			//println("DEAD");
-			dead=true;
+			die();
+			return;
 		}
 	}
 
