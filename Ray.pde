@@ -1,6 +1,7 @@
 boolean bridgeRays = false;
 boolean renderTrajectory = false;
 boolean searchCircles = true;
+boolean renderRay = true;
 
 class AnimatedRay extends Ray {
 public AnimatedRay(float angle, PVector origin) {
@@ -50,13 +51,12 @@ class FastRay extends Ray{
 	Obstacle lastNearestNeighbor = null;
 	float lastMinDist = max(width, height);
 
-	ArrayList<Obstacle> obstacles;
 	ArrayList<NearestObstacleGuess> guesses = new ArrayList<NearestObstacleGuess>();
 
 	public FastRay(float angle, PVector origin) {
 		super(angle, origin);
-		this.obstacles = (ArrayList)obst.clone();
-		for (Obstacle obstacle: this.obstacles) {
+		ArrayList<Obstacle> obstacles = (ArrayList)obst.clone();
+		for (Obstacle obstacle: obstacles) {
 			guesses.add(new NearestObstacleGuess(obstacle, diagonal));
 		}
 	}
@@ -71,7 +71,6 @@ class FastRay extends Ray{
 
 			if (dist > guess.dist) {
 				leaving.add(guess);
-				//println("removing: "+guess.obstacle+"bc+"+dist+">"+guess.dist+ "  ");
 			}
 			guess.dist = dist;
 
@@ -81,15 +80,10 @@ class FastRay extends Ray{
 			}
 		}
 
-		//println("len"+leaving.size()+"  ");
 		leaving.remove(closest);
-		//println("leavers"+leaving.size()+"  ");
-		//println("closes"+closest+"  ");
-		println("checks"+this.guesses.size());
 
 		for (NearestObstacleGuess leaver: leaving) {
 			this.guesses.remove(leaver);
-			//println("removing"+guess.obstacle+"  ");
 		}
 		return closest;
 	}
@@ -136,24 +130,23 @@ class Ray {
 			return;
 		}
 
-		//TODO what if no obstacle
-		RayCastSearchArea currentSearch = new RayCastSearchArea(crawl, nearestObst);
-		searches.add(currentSearch);
-
-		PVector towards = PVector.fromAngle(radians(angle+45)); //TODO why 45
-				  towards.setMag(nearestObst.dist(crawl));
-		PVector between = towards.add(crawl);
-		this.crawl = between;
-
 		if (offScreen(this.crawl)) {
 			die();
 			return;
 		}
 
+		RayCastSearchArea currentSearch = new RayCastSearchArea(crawl, nearestObst);
+		searches.add(currentSearch);
+
 		if (currentSearch.diam < 10) {
 			die();
 			return;
 		}
+
+		PVector towards = PVector.fromAngle(radians(angle+45)); //TODO why 45
+				  towards.setMag(nearestObst.dist(crawl));
+		PVector between = towards.add(crawl);
+		this.crawl = between;
 	}
 
 	public void act() {
@@ -223,6 +216,11 @@ class Ray {
 				rcs.render();
 			}
 		}
+		if (renderRay) {
+			stroke(150);
+			line(this.origin.x, this.origin.y, this.crawl.x, this.crawl.y);
+		}
+
 		renderCrawler();
 		if (renderTrajectory){renderTrajectory();}
 

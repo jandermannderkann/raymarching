@@ -27,9 +27,12 @@ class RayCastSearchArea {
 		if (renderCircle){
 			stroke(150,100);
 		}else {
-
 			noFill();
-			stroke(150,20);
+			if(renderRay) { //TODO wierd dependency here
+				noStroke() ;
+			}else {
+				stroke(150,20);
+			}
 
 		}
 
