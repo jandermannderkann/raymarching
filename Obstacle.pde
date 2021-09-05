@@ -1,3 +1,9 @@
+abstract class Obstacle {
+  public boolean intersects(PVector needle){return true;}; //TODO check if this is stupid
+  public float dist(PVector target){return -1;};
+  public void render(){};
+  public void mark(){};
+}
 
 Obstacle getRandomObstacle() {
       float x = random(width);
@@ -11,9 +17,9 @@ Obstacle getRandomObstacle() {
       CircObstacle newObst = new CircObstacle(cp, p2);
       return newObst;
 }
- 
+
 boolean noborder = true;
-public class CircObstacle implements Obstacle {
+public class CircObstacle extends Obstacle {
   PVector anchor;
   float rad;
   color col = 0;
@@ -63,7 +69,7 @@ public CircObstacle(PVector c1, PVector c2) {
 }
 
 
-public class RectObstacle implements Obstacle {
+public class RectObstacle extends Obstacle {
   PVector anchor;
   float w;
   float h;
