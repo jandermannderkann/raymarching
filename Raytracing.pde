@@ -17,8 +17,8 @@ void setup(){
 	frameRate(10);
 	background(bgcol);
 	centerP = new PVector(width/2, height/2);
+	spawnRandomObstacles(50);
 	this.diagonal = sqrt(width*width + height*height);
-	println(diagonal);
 	if (animated) {
 		cast = new AnimatedRayCast(noRays, centerP);
 	} else {
@@ -28,23 +28,6 @@ void setup(){
 
 }
 
-void spawnRandomObstacles(int n) {
-	for(int i = 0; i < n; i++) {
-		float x = random(width);
-		float y = random(height);
-		PVector cp = new PVector(x,y);
-
-		float size = random(50)+10;
-		PVector p2 = new PVector(size,size);
-		p2.add(cp);
-
-		CircObstacle newObst = new CircObstacle(cp, p2);
-		if (newObst.intersects(this.centerP)){
-			continue;
-		}
-		obst.add(newObst);
-	}
-}
 
 void draw(){
 	background(bgcol);
@@ -70,15 +53,11 @@ public void act(){
 	this.mouse = newMouse;
 
 	if (animated) {
-		println("ilive");
 		if(cast.dead()) {
-			println("imdead");
-
 			cast = new AnimatedRayCast(noRays, centerP);
 		}
 		cast.act();
 	}else {
-
 		cast = new RayCast(noRays, this.mouse);
 	}
 }
@@ -109,7 +88,17 @@ public void create_obst() {
     return;
   }
   firstClick = new PVector(mouseX, mouseY);
+}
 
+
+void spawnRandomObstacles(int n) {
+	for(int i = 0; i < n; i++) {
+		Obstacle newObst = getRandomObstacle();
+		if (newObst.intersects(this.centerP)){
+			continue;
+		}
+		obst.add(newObst);
+	}
 }
 
 
@@ -122,5 +111,3 @@ public boolean offScreen(PVector p) {
 	}
 	return false;
 }
-
-
