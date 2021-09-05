@@ -1,3 +1,7 @@
+boolean bridgeRays = false;
+boolean renderTrajectory = false;
+boolean searchCircles = true;
+
 class AnimatedRay extends Ray {
 public AnimatedRay(float angle, PVector origin) {
 	super(angle, origin);
@@ -204,9 +208,6 @@ class Ray {
 		}
 	}
 
-	boolean bridgeRays = false;
-	boolean trajectory = true;
-	boolean searchCircles = true;
 	public void render() {
 		if (searchCircles) {
 			for (RayCastSearchArea rcs : searches) {
@@ -215,7 +216,7 @@ class Ray {
 			}
 		}
 		renderCrawler();
-		if (trajectory){renderTrajectory();}
+		if (renderTrajectory){renderTrajectory();}
 
 		if (bridgeRays){renderBridges();}
 	}
