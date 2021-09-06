@@ -128,9 +128,9 @@ class Ray {
 		}
 	}
 
-	public void die () {
+	public void die() {
 		this.dead = true;
-		println("dead");
+		//println("dead");
 	}
 
 	public void step() {
@@ -174,9 +174,6 @@ class Ray {
 		if(!dead) {
 			fill(color(0,100,0));
 			circle(crawl.x, crawl.y, 10);
-		} else {
-			stroke(255);
-			point(crawl.x, crawl.y);
 		}
 	}
 
@@ -272,6 +269,9 @@ class Ray {
 			renderRay_simple();
 		} else if (renderRay == 2){
 			renderRay_quadratic();
+		} else {
+			stroke(255);
+			point(crawl.x, crawl.y);
 		}
 
 		renderCrawler();
