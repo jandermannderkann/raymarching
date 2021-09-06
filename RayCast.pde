@@ -21,13 +21,18 @@ class RayCast implements Castable{
 	public Ray spawnRay(float angle, PVector origin) {
 		Ray ray;
 			if(traceMode) {
-				ray = new TracedRay(angle, origin);
-			} else if (fast) {
-				ray = new FastRay(angle, origin);
-			} else if (animated){
-				ray = new AnimatedRay(angle, origin);
+				if (animated) {
+					ray = new AnimatedTracedRay(angle, origin);
+				}
+				else {
+					ray = new TracedRay(angle, origin);
+				}
 			} else {
-				ray = new Ray(angle, origin);
+				if (animated){
+					ray = new AnimatedRay(angle, origin);
+				} else {
+					ray = new Ray(angle, origin);
+				}
 			}
 			return ray;
 	}
