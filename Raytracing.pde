@@ -2,11 +2,12 @@ ArrayList<Obstacle> obst = new ArrayList<Obstacle>();
 PVector centerP;
 PVector mouse;
 int noRays = 64;
-int noObstacles = 100;
+int noObstacles = 40;
 float diagonal;
-Castable cast;
+RayCast cast;
 HelpMenu helpDialog;
 
+boolean traceMode = false;
 boolean animated = false;
 boolean colored = false;
 boolean animateOnMouseMove = false;
@@ -26,11 +27,7 @@ void setup(){
 	this.diagonal = sqrt(width*width + height*height);
 	this.helpDialog = new HelpMenu();
 
-	if (animated) {
-		cast = new AnimatedRayCast(noRays, centerP);
-	} else {
-		cast = new RayCast(noRays, centerP);
-	}
+	cast = new RayCast(noRays, centerP);
 }
 
 
@@ -69,7 +66,7 @@ public void act(){
 
 	if (animated) {
 		if(cast.dead()) {
-			cast = new AnimatedRayCast(noRays, this.mouse);
+			cast = new RayCast(noRays, this.mouse);
 		}
 	}else {
 		if (mouseUpdate) {
@@ -115,6 +112,9 @@ void keyTyped() {
 	}
 	if (key == 'm') {
 		animateOnMouseMove= !animateOnMouseMove;
+	}
+	if (key == 'e') {
+		traceMode= !traceMode;
 	}
 }
 

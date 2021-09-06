@@ -6,14 +6,30 @@ interface Castable {
 }
 
 
-class AnimatedRayCast implements Castable{ //TODO favor over inheritance
+class RayCast implements Castable{
 	ArrayList<Ray> rays = new ArrayList<Ray>();
 	boolean dead = false;
-	public AnimatedRayCast(int noRays, PVector origin){
+
+	public RayCast(int noRays, PVector origin) {
 		for(int i = noRays; i > 0; i--) {
-			Ray ray = new AnimatedRay(map(i, 0, noRays, 0, 360-1), origin);
+			Ray ray = spawnRay(map(i,0,noRays,0,360),origin);
 			rays.add(ray);
 		}
+	}
+
+
+	public Ray spawnRay(float angle, PVector origin) {
+		Ray ray;
+			if(traceMode) {
+				ray = new TracedRay(angle, origin);
+			} else if (fast) {
+				ray = new FastRay(angle, origin);
+			} else if (animated){
+				ray = new AnimatedRay(angle, origin);
+			} else {
+				ray = new Ray(angle, origin);
+			}
+			return ray;
 	}
 
 	public void act() {
@@ -28,45 +44,6 @@ class AnimatedRayCast implements Castable{ //TODO favor over inheritance
 		if (!possiblyAlive) {
 			this.dead = true;
 		}
-		println("dead?"+this.dead);
-	}
-
-	public boolean dead() {
-		return this.dead;
-	}
-
-	public void render() {
-		for (Ray ray:rays) {
-			ray.render();
-		}
-	}
-
-}
-
-
-class RayCast implements Castable{
-	ArrayList<Ray> rays = new ArrayList<Ray>();
-	boolean dead = false;
-
-	public RayCast(int noRays, PVector origin) {
-		for(int i = noRays; i > 0; i--) {
-			Ray ray;
-			if(fast) {
-				ray = new FastRay(map(i, 0, noRays, 0, 360), origin);
-			}else {
-				ray = new Ray(map(i, 0, noRays, 0, 360), origin);
-			}
-			rays.add(ray);
-		}
-		
-		for (Ray ray:rays) {
-			ray.act();
-		}
-		this.dead = true;
-	}
-
-	public void act() {
-
 	}
 
 	public void render() {
