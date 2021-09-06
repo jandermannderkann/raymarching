@@ -1,7 +1,7 @@
 boolean bridgeRays = false;
 boolean renderTrajectory = false;
 boolean searchCircles = true;
-boolean renderRay = true;
+int renderRay = 0;
 
 float grainSize = 5;
 
@@ -130,7 +130,7 @@ class Ray {
 
 	public void die () {
 		this.dead = true;
-		//println("dead");
+		println("dead");
 	}
 
 	public void step() {
@@ -192,8 +192,50 @@ class Ray {
 		popMatrix();
 	}
 
-	public void renderBrige() {
+	float lightSegmentSize = 20;
+	public void renderRay_quadratic() {
+		PVector lastSegmentEnd = new PVector(this.origin.x, this.origin.y);
+		PVector dest = this.crawl;
 
+		for (int i = 0; i < this.dist; i+= lightSegmentSize) {
+			if (lightSegmentSize > grainSize) {
+				if (i+lightSegmentSize > this.dist) {
+					lightSegmentSize = grainSize;
+				}
+			}
+			PVector towards = PVector.fromAngle(radians(this.angle+45)); //TODO why 45
+				  towards.setMag(lightSegmentSize);
+
+			towards.add(lastSegmentEnd);
+			PVector segmentEnd = towards;
+			
+
+			float strokeVal = map(min(i,diagonal*1/3), 0, diagonal*1/3, sqrt(255),sqrt(bgcol_val));
+			strokeVal = strokeVal*strokeVal;
+			stroke(strokeVal);
+			line(segmentEnd.x, segmentEnd.y, lastSegmentEnd.x, lastSegmentEnd.y);
+
+			lastSegmentEnd = segmentEnd;
+		}
+	}
+
+	public void renderRay_simple() {
+		stroke(150);
+		line(this.origin.x, this.origin.y, this.crawl.x, this.crawl.y);
+	}
+	public void renderRay_old() {
+		//stroke(150);
+		PVector last = this.crawl;
+		int c = 0;
+		int size = this.searches.size();
+		for (RayCastSearchArea search: this.searches) {
+			stroke(map(c, 0, size, 200, 55));
+			line(last.x, last.y, search.origin.x, search.origin.y);
+			
+			last = search.origin;
+			c++;
+		}
+		//line(this.origin.x, this.origin.y, this.crawl.x, this.crawl.y);
 	}
 
 	float grain = 10;
@@ -226,9 +268,10 @@ class Ray {
 				rcs.render();
 			}
 		}
-		if (renderRay) {
-			stroke(150);
-			line(this.origin.x, this.origin.y, this.crawl.x, this.crawl.y);
+		if (renderRay == 1) {
+			renderRay_simple();
+		} else if (renderRay == 2){
+			renderRay_quadratic();
 		}
 
 		renderCrawler();
