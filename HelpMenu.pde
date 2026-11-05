@@ -12,13 +12,15 @@ class HelpMenu {
 
 	public ArrayList<String> getCommands() { 
 		ArrayList<String> tmp = new ArrayList<String>();
+		tmp.add("+/-: inc/deacrease amount of rays");
 		tmp.add("a: toggle animation (" + animated + ")");
 		tmp.add("t: toggle trajectory (" + renderTrajectory);
 		tmp.add("f: toggle fast calculation (" + fast);
-		tmp.add("+/-: inc/deacrease amount of rays");
 		tmp.add("r: toggle rendering of rays (" + renderRay + ")");
 		tmp.add("c: toggle circle modes (" + renderCircle + ")");
 		tmp.add("m: only animate on mouse move (" + animateOnMouseMove+ ")");
+		tmp.add("e: toggle trace mode (" + traceMode+ ")");
+		tmp.add("o: toggle color mode (" + colored + ")");
 		tmp.add("h: toggle help");
 		return tmp;
 	}
@@ -29,6 +31,7 @@ class HelpMenu {
 		tmp.add("#rays= "+noRays);
 		tmp.add("#obstacles= "+noObstacles);
 		tmp.add("grainSize = "+grainSize);
+		tmp.add("colorshift = "+colorShift);
 		return tmp;
 	}
 

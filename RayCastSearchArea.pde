@@ -21,17 +21,18 @@ class RayCastSearchArea {
 	public void render() {
 		noFill();
 		if (colored) {
-			fill(this.col);
-		}else {
+			stroke(this.col);
 		}
-		if (renderCircle == 0){
-			stroke(150,100);
-		}else if (renderCircle == 1){
-			stroke(150,20);
-		}else {
-			noStroke();
+		else {
+			strokeWeight(1);
+			if (renderCircle == 0){
+				stroke(150,100);
+			}else if (renderCircle == 1){
+				stroke(150,20);
+			}else {
+				noStroke();
+			}
 		}
-
 
 		circle(this.origin.x, this.origin.y, this.diam);
 	}
