@@ -19,9 +19,9 @@ color c2;
 
 void setup(){
 	size(1900,1080);
-	frameRate(10);
+	frameRate(60);
 	background(bgcol);
-
+	textSize(20); 
 	centerP = new PVector(width/2, height/2);
 	spawnRandomObstacles(noObstacles);
 	this.diagonal = sqrt(width*width + height*height);

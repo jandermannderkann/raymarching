@@ -50,7 +50,7 @@ class NearestObstacleGuess{
 	}
 }
 
-
+/*
 class FastRay extends Ray{
 
 	NearestObstacleFinder finder;
@@ -60,6 +60,17 @@ class FastRay extends Ray{
 		this.finder = new FastNearestObstacleFinder(obst);
 	}
 
+}*/
+class AnimatedTracedRay extends TracedRay{
+	public AnimatedTracedRay(float angle, PVector origin) {
+		super(angle, origin);
+	}
+	public void act() {
+		if (dead) {
+			return;
+		}
+		step();
+	}
 }
 
 class TracedRay extends Ray{
@@ -110,7 +121,11 @@ class Ray {
 		this.origin = origin;
 		this.crawl = origin;
 		this.angle = angle;
-		this.finder = new NearestObstacleFinder(obst);
+		if (fast) {
+			this.finder = new FastNearestObstacleFinder(obst);
+		}else {
+			this.finder = new NearestObstacleFinder(obst);
+		}
 	}
 
 	public void die () {
