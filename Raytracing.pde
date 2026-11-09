@@ -1,7 +1,8 @@
 ArrayList<Obstacle> obst = new ArrayList<Obstacle>();
 PVector centerP;
 PVector mouse;
-int noRays = 100;
+int noRays = 64;
+float diagonal;
 Castable cast;
 boolean animated = false;
 boolean colored = false;
@@ -16,8 +17,8 @@ void setup(){
 	frameRate(10);
 	background(bgcol);
 	centerP = new PVector(width/2, height/2);
-	spawnRandomObstacles(20);
-
+	this.diagonal = sqrt(width*width + height*height);
+	println(diagonal);
 	if (animated) {
 		cast = new AnimatedRayCast(noRays, centerP);
 	} else {
@@ -87,6 +88,16 @@ public void mouseClicked() {
 	create_obst();
 }
 
+void keyTyped() {
+	if (key == 43) {
+		this.noRays*=2;
+	}
+	if (key == 45) {
+		if (this.noRays>1){
+			this.noRays/=2;
+		}
+	}
+}
 PVector firstClick = null;
 public void create_obst() {
   
