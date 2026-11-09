@@ -3,6 +3,8 @@ boolean renderTrajectory = false;
 boolean searchCircles = true;
 boolean renderRay = true;
 
+float grainSize = 5;
+
 class AnimatedRay extends Ray {
 public AnimatedRay(float angle, PVector origin) {
 	super(angle, origin);
@@ -11,7 +13,6 @@ public AnimatedRay(float angle, PVector origin) {
 		if (dead) {
 			return;
 		}
-		//println(origin.dist(this.crawl));
 		step();
 	}
 }
@@ -138,7 +139,7 @@ class Ray {
 		RayCastSearchArea currentSearch = new RayCastSearchArea(crawl, nearestObst);
 		searches.add(currentSearch);
 
-		if (currentSearch.diam < 10) {
+		if (currentSearch.diam < grainSize) {
 			die();
 			return;
 		}
