@@ -5,10 +5,6 @@ public class FastNearestObstacleFinder extends NearestObstacleFinder{
 
 	public FastNearestObstacleFinder(ArrayList<Obstacle> obstacles) {
 		super(obstacles);
-		//ArrayList<Obstacle> tmp = (ArrayList)obstacles.clone();
-		//for (Obstacle obstacle: tmp) {
-		//	this.haystack.add(new NearestObstacleGuess(obstacle, diagonal));
-		//}
 	}
 
 	public Obstacle getNearestObstacle(PVector p) {
