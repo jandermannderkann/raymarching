@@ -170,9 +170,8 @@ class Ray {
 	}
 
 	public void renderCrawler(){
-		fill(color(100,0,0));
 		if(!dead) {
-			fill(color(0,100,0));
+			fill(color(20,100,100));
 			circle(crawl.x, crawl.y, 10);
 		}
 	}
