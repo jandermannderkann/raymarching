@@ -1,8 +1,15 @@
-interface Obstacle {
-  public boolean intersects(PVector needle);
-  public float dist(PVector target);
-  public void render();
-  public void mark();
+
+Obstacle getRandomObstacle() {
+      float x = random(width);
+      float y = random(height);
+      PVector cp = new PVector(x,y);
+
+      float size = random(50)+10;
+      PVector p2 = new PVector(size,size);
+      p2.add(cp);
+
+      CircObstacle newObst = new CircObstacle(cp, p2);
+      return newObst;
 }
  
 boolean noborder = true;
