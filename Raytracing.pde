@@ -2,7 +2,7 @@ ArrayList<Obstacle> obst = new ArrayList<Obstacle>();
 PVector centerP;
 PVector mouse;
 int noRays = 64;
-int noObstacles = 40;
+int noObstacles = 20;
 float diagonal;
 RayCast cast;
 HelpMenu helpDialog;
@@ -11,7 +11,8 @@ boolean traceMode = false;
 boolean animated = false;
 boolean colored = false;
 boolean animateOnMouseMove = false;
-color bgcol = color(20);
+int bgcol_val = 20;
+color bgcol = color(bgcol_val);
 
 color c1;
 color c2;
@@ -105,7 +106,8 @@ void keyTyped() {
 		fast= !fast;
 	}
 	if (key == 'r') {
-		renderRay= !renderRay;
+		renderRay++;
+		renderRay = renderRay %3;
 	}
 	if (key == 'h') {
 		help_visible= !help_visible;
