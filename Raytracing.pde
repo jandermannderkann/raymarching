@@ -95,7 +95,8 @@ void keyTyped() {
 		}
 	}
 	if (key == 'c') {
-		renderCircle = !renderCircle;
+		renderCircle ++;
+		renderCircle = renderCircle%3;
 	}
 	if (key == 't') {
 		renderTrajectory = !renderTrajectory;

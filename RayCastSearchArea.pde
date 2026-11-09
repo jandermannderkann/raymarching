@@ -1,4 +1,4 @@
-boolean renderCircle = true;
+int renderCircle = 1;
 class RayCastSearchArea {
 	PVector origin;
 	Obstacle target;
@@ -19,22 +19,19 @@ class RayCastSearchArea {
 	}
 
 	public void render() {
+		noFill();
 		if (colored) {
 			fill(this.col);
 		}else {
-			noFill();
 		}
-		if (renderCircle){
+		if (renderCircle == 0){
 			stroke(150,100);
+		}else if (renderCircle == 1){
+			stroke(150,20);
 		}else {
-			noFill();
-			if(renderRay) { //TODO wierd dependency here
-				noStroke() ;
-			}else {
-				stroke(150,20);
-			}
-
+			noStroke();
 		}
+
 
 		circle(this.origin.x, this.origin.y, this.diam);
 	}
