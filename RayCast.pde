@@ -1,3 +1,5 @@
+boolean fast = true;
+interface Castable {
 
 class AnimatedRayCast implements Castable{ //TODO favor over inheritance
 	ArrayList<Ray> rays = new ArrayList<Ray>();
@@ -65,7 +67,12 @@ class RayCast implements Castable{
 
 	public RayCast(int noRays, PVector origin) {
 		for(int i = noRays; i > 0; i--) {
-			Ray ray = new FastRay(map(i, 0, noRays, 0, 360-1), origin);
+			Ray ray;
+			if(fast) {
+				ray = new FastRay(map(i, 0, noRays, 0, 360-1), origin);
+			}else {
+				ray = new Ray(map(i, 0, noRays, 0, 360-1), origin);
+			}
 			rays.add(ray);
 		}
 		
