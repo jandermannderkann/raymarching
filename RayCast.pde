@@ -52,9 +52,9 @@ class RayCast implements Castable{
 		for(int i = noRays; i > 0; i--) {
 			Ray ray;
 			if(fast) {
-				ray = new FastRay(map(i, 0, noRays, 0, 360-1), origin);
+				ray = new FastRay(map(i, 0, noRays, 0, 360), origin);
 			}else {
-				ray = new Ray(map(i, 0, noRays, 0, 360-1), origin);
+				ray = new Ray(map(i, 0, noRays, 0, 360), origin);
 			}
 			rays.add(ray);
 		}
@@ -62,7 +62,7 @@ class RayCast implements Castable{
 		for (Ray ray:rays) {
 			ray.act();
 		}
-		boolean dead = true;
+		this.dead = true;
 	}
 
 	public void act() {
