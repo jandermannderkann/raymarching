@@ -1,0 +1,34 @@
+on:
+  push:
+    branches:
+    - main
+    
+jobs:
+  build:
+    name: Export sketch for multiple targets
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        target : ['linux-amd64', 'windows-amd64'] # 'linux-arm', 'linux-aarch64' (R-Pi)
+    steps:
+      - uses: actions/checkout@v4 
+      - name: install dependencies
+        run: sudo apt-get update && sudo apt-get install -y wget curl tar openjdk-21-jre libprocessing-core-java
+      - name: install processing from static github-link
+        run: wget -q https://github.com/processing/processing4/releases/download/processing-1297-4.3.4/processing-4.3.4-linux-x64.tgz
+      - name: Log downloaded processing archive
+        run: ls
+      - name: unpack
+        run: tar -xf processing-4.3.4-linux-x64.tgz
+      - name: Log unpacked processing files
+        run: ls
+      - name: export application
+        # TODO add --no-java switch
+        run: ./processing-4.3.4/processing-java --sketch="Raymarching" --output="dist/${{ matrix.target }}" --export --variant ${{ matrix.target }} 
+      - name: Log generated files
+        run: ls
+      - name: Archive export artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Raymarching-${{ matrix.target }}
+          path: dist/${{ matrix.target }}
