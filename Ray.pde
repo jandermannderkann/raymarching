@@ -16,6 +16,8 @@ public AnimatedRay(float angle, PVector origin) {
 		step();
 	}
 }
+
+
 /*
 class RayGroup extends Ray{
 	ArrayList<FastRay> rays;
@@ -48,48 +50,50 @@ class NearestObstacleGuess{
 	}
 }
 
-class FastRay extends Ray{
-	Obstacle lastNearestNeighbor = null;
-	float lastMinDist = max(width, height);
 
-	ArrayList<NearestObstacleGuess> guesses = new ArrayList<NearestObstacleGuess>();
+class FastRay extends Ray{
+
+	NearestObstacleFinder finder;
 
 	public FastRay(float angle, PVector origin) {
 		super(angle, origin);
-		ArrayList<Obstacle> obstacles = (ArrayList)obst.clone();
-		for (Obstacle obstacle: obstacles) {
-			guesses.add(new NearestObstacleGuess(obstacle, diagonal));
-		}
-	}
-
-	public Obstacle getNearestObstacle() {
-		Obstacle closest = this.lastNearestNeighbor;
-		float minDist = this.lastMinDist;
-		ArrayList<NearestObstacleGuess> leaving = new ArrayList<NearestObstacleGuess>();
-
-		for (NearestObstacleGuess guess: this.guesses) { 
-			float dist = guess.obstacle.dist(this.crawl);
-
-			if (dist > guess.dist) {
-				leaving.add(guess);
-			}
-			guess.dist = dist;
-
-			minDist = min(minDist,dist);
-			if (minDist == dist) {
-				closest = guess.obstacle; //TODO improve?
-			}
-		}
-
-		leaving.remove(closest);
-
-		for (NearestObstacleGuess leaver: leaving) {
-			this.guesses.remove(leaver);
-		}
-		return closest;
+		this.finder = new FastNearestObstacleFinder(obst);
 	}
 
 }
+
+class TracedRay extends Ray{
+	public TracedRay(float angle, PVector origin) {
+		super(angle, origin);
+	}
+	public void step() {
+		PVector towards = PVector.fromAngle(radians(angle+45)); //TODO why 45
+				  towards.setMag(grainSize);
+		PVector between = towards.add(crawl);
+		for (Obstacle obstacle: obst) {
+			if (obstacle.intersects(this.crawl)) {
+				die();
+				return;
+			}
+		}
+		if (offScreen(this.crawl)) {
+			die();
+			return;
+		}
+		this.crawl = between;
+	}
+
+	public void act() {
+		if (dead) {
+			return;
+		}
+		while (!dead) {
+			step();
+		}
+		this.dist = origin.dist(this.crawl);
+	}
+}
+
 class Ray {
 	PVector crawl;
 	PVector origin;
@@ -98,25 +102,15 @@ class Ray {
 	ArrayList<RayCastSearchArea> searches= new ArrayList<RayCastSearchArea>();
 	float maxDist = max(width,height)/2;
 	boolean dead = false;
+	
+	NearestObstacleFinder finder;
 
 
 	public Ray(float angle, PVector origin) {
 		this.origin = origin;
 		this.crawl = origin;
 		this.angle = angle;
-	}
-
-	public Obstacle getNearestObstacle() {
-		Obstacle closest = null;
-		float minDist = max(width, height);
-		for (Obstacle needle: obst) { 
-			float dist = needle.dist(this.crawl);
-			minDist = min(minDist,dist);
-			if (minDist == dist) {
-				closest = needle;
-			}
-		}
-		return closest;
+		this.finder = new NearestObstacleFinder(obst);
 	}
 
 	public void die () {
@@ -125,7 +119,7 @@ class Ray {
 	}
 
 	public void step() {
-		Obstacle nearestObst = getNearestObstacle();
+		Obstacle nearestObst = finder.getNearestObstacle(this.crawl);
 		if (nearestObst == null) {
 			die();
 			return;
