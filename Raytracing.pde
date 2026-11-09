@@ -2,13 +2,14 @@ ArrayList<Obstacle> obst = new ArrayList<Obstacle>();
 PVector centerP;
 PVector mouse;
 int noRays = 64;
+int noObstacles = 100;
 float diagonal;
 Castable cast;
 HelpMenu helpDialog;
-boolean help_visible = false;
+
 boolean animated = false;
 boolean colored = false;
-
+boolean animateOnMouseMove = false;
 color bgcol = color(20);
 
 color c1;
@@ -21,7 +22,7 @@ void setup(){
 	background(bgcol);
 
 	centerP = new PVector(width/2, height/2);
-	spawnRandomObstacles(50);
+	spawnRandomObstacles(noObstacles);
 	this.diagonal = sqrt(width*width + height*height);
 	initHelp();
 
@@ -56,20 +57,26 @@ void render() {
 
 public void act(){
 	PVector newMouse = new PVector(mouseX, mouseY);
+	boolean mouseUpdate = false;
 
-	if (newMouse.equals(this.mouse)) {
+	if (!newMouse.equals(this.mouse)) {
+		mouseUpdate = true;
+		this.mouse = newMouse;
+	}
+	if (animateOnMouseMove && !mouseUpdate) {
 		return;
 	}
-	this.mouse = newMouse;
 
 	if (animated) {
 		if(cast.dead()) {
-			cast = new AnimatedRayCast(noRays, centerP);
+			cast = new AnimatedRayCast(noRays, this.mouse);
 		}
-		cast.act();
 	}else {
-		cast = new RayCast(noRays, this.mouse);
+		if (mouseUpdate) {
+			cast = new RayCast(noRays, this.mouse);
+		}
 	}
+	cast.act();
 }
 
 
@@ -104,6 +111,9 @@ void keyTyped() {
 	}
 	if (key == 'h') {
 		help_visible= !help_visible;
+	}
+	if (key == 'm') {
+		animateOnMouseMove= !animateOnMouseMove;
 	}
 }
 
