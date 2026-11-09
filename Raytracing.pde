@@ -24,7 +24,7 @@ void setup(){
 	centerP = new PVector(width/2, height/2);
 	spawnRandomObstacles(noObstacles);
 	this.diagonal = sqrt(width*width + height*height);
-	initHelp();
+	this.helpDialog = new HelpMenu();
 
 	if (animated) {
 		cast = new AnimatedRayCast(noRays, centerP);
