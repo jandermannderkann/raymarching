@@ -4,6 +4,7 @@ PVector mouse;
 int noRays = 64;
 float diagonal;
 Castable cast;
+
 boolean animated = false;
 boolean colored = false;
 
@@ -11,6 +12,7 @@ color bgcol = color(20);
 
 color c1;
 color c2;
+
 
 void setup(){
 	size(1900,1080);
@@ -24,8 +26,6 @@ void setup(){
 	} else {
 		cast = new RayCast(noRays, centerP);
 	}
-	
-
 }
 
 
@@ -67,6 +67,7 @@ public void mouseClicked() {
 	create_obst();
 }
 
+
 void keyTyped() {
 	if (key == 43) {
 		this.noRays*=2;
@@ -76,10 +77,23 @@ void keyTyped() {
 			this.noRays/=2;
 		}
 	}
+	if (key == 'c') {
+		renderCircle = !renderCircle;
+	}
+	if (key == 't') {
+		renderTrajectory = !renderTrajectory;
+	}
+	if (key == 'a') {
+		animated = !animated;
+	}
+	if (key == 'f') {
+		fast= !fast;
+	}
 }
+
+
 PVector firstClick = null;
 public void create_obst() {
-  
   if (firstClick != null) {
     PVector secondClick = new PVector(mouseX, mouseY);
     obst.add(new CircObstacle(firstClick, secondClick));
