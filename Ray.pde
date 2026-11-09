@@ -35,54 +35,62 @@ class RayGroup extends Ray{
 	}
 }
 */
+
+class NearestObstacleGuess{
+	Obstacle obstacle;
+	float dist;
+
+	public NearestObstacleGuess(Obstacle obstacle, float dist) {
+		this.obstacle = obstacle;
+		this.dist = dist;
+	}
+}
+
 class FastRay extends Ray{
 	Obstacle lastNearestNeighbor = null;
 	float lastMinDist = max(width, height);
 
-	Obstacle furthestNeighbor = null;
-	float maxDist = 0;
 	ArrayList<Obstacle> obstacles;
+	ArrayList<NearestObstacleGuess> guesses = new ArrayList<NearestObstacleGuess>();
 
 	public FastRay(float angle, PVector origin) {
 		super(angle, origin);
 		this.obstacles = (ArrayList)obst.clone();
+		for (Obstacle obstacle: this.obstacles) {
+			guesses.add(new NearestObstacleGuess(obstacle, diagonal));
+		}
 	}
 
 	public Obstacle getNearestObstacle() {
 		Obstacle closest = this.lastNearestNeighbor;
 		float minDist = this.lastMinDist;
-		Obstacle furthest = null;
-		float maxDist = 0;
-		//int furthest_index = 0 ;
-		int counter = 0;
-		//println(this.obstacles.size());
-		for (Obstacle needle: this.obstacles) { 
-			float dist = needle.dist(this.crawl);
+		ArrayList<NearestObstacleGuess> leaving = new ArrayList<NearestObstacleGuess>();
+
+		for (NearestObstacleGuess guess: this.guesses) { 
+			float dist = guess.obstacle.dist(this.crawl);
+
+			if (dist > guess.dist) {
+				leaving.add(guess);
+				//println("removing: "+guess.obstacle+"bc+"+dist+">"+guess.dist+ "  ");
+			}
+			guess.dist = dist;
+
 			minDist = min(minDist,dist);
-			maxDist = max(maxDist,dist);
 			if (minDist == dist) {
-				closest = needle; //TODO improve?
+				closest = guess.obstacle; //TODO improve?
 			}
-			if (maxDist == dist) {
-				furthest = needle;	
-				//furthest_index = counter;
-			}
-			counter++;
 		}
 
-		if (furthest == this.furthestNeighbor) {
-			//println(furthestNeighbor +"="+ furthest);
-			//println(maxDist + ">?" + this.maxDist);
-			if (maxDist > this.maxDist) {
-				this.obstacles.remove(furthest);
-				//furthest.mark();
-				//println("removing"+ furthest);
-				//println("from "+this.obstacles.size());
-				//println("main has" + obst.size());
-			}
+		//println("len"+leaving.size()+"  ");
+		leaving.remove(closest);
+		//println("leavers"+leaving.size()+"  ");
+		//println("closes"+closest+"  ");
+		println("checks"+this.guesses.size());
+
+		for (NearestObstacleGuess leaver: leaving) {
+			this.guesses.remove(leaver);
+			//println("removing"+guess.obstacle+"  ");
 		}
-		this.furthestNeighbor = furthest;
-		this.maxDist = maxDist;
 		return closest;
 	}
 
